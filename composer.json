@@ -1,0 +1,27 @@
+{
+    "name": "wire-drupal/wire",
+    "description": "HTML over wire for Drupal.",
+    "type": "drupal-module",
+    "license": "proprietary-(for-now)",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-json": "*",
+        "drupal/core": "^10",
+        "illuminate/support": "^9.48",
+        "illuminate/validation": "^9.48",
+        "illuminate/macroable": "^9.48"
+    },
+    "extra": {
+        "drush": {
+            "services": {
+                "drush.services.yml": "^11"
+            }
+        }
+    }
+}

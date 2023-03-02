@@ -1,0 +1,5 @@
+services:
+  wire.generators:
+    class: \Drupal\wire\Generators\WireComponentCreateGenerator
+    tags:
+      - { name: drush.generator.v2 }
