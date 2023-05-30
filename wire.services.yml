@@ -1,0 +1,21 @@
+services:
+  plugin.manager.wire:
+    class: Drupal\wire\Plugin\WirePluginManager
+    parent: default_plugin_manager
+
+  wire.components.registry:
+    class: Drupal\wire\WireComponentsRegistry
+    arguments:
+      - '@module_handler'
+      - '@theme.manager'
+      - '@cache.default'
+      - '@file_system'
+      - '%app.root%'
+
+  Drupal\wire\Twig\Extension\WireTwigExtension:
+    tags:
+      - { name: twig.extension }
+
+  Drupal\wire\StackMiddleware\RegisterWireMiddleware:
+    tags:
+      - { name: http_middleware, priority: 180, responder: true }

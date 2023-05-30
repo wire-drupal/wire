@@ -1,0 +1,38 @@
+init:
+  version: 0.0.1
+  js:
+    /wire/init.js: {
+      minified: true,
+      preprocess: false,
+      attributes: { data-turbo-eval: false, data-turbolinks-eval: false }
+    }
+  dependencies:
+    - wire/js-base
+    - wire/styles
+
+js-base:
+  version: 0.0.1
+  js:
+    /wire/wire.js: {
+      minified: true,
+      attributes: { data-turbo-eval: false, data-turbolinks-eval: false }
+    }
+
+alpinejs:
+  version: 3.12.1
+  js:
+    '/wire/alpinejs.js': {
+      minified: true,
+      preprocess: false,
+      attributes: { defer: true }
+    }
+
+styles:
+  version: 0.0.1
+  css:
+    state:
+      /wire/styles.css: {
+        minified: false,
+        preprocess: false,
+      }
+

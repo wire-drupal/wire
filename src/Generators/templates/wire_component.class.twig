@@ -1,0 +1,51 @@
+{% import '_lib/di.twig' as di %}
+<?php
+
+namespace Drupal\{{ machine_name }}\Plugin\WireComponent;
+
+use Drupal\wire\View;
+use Drupal\wire\WireComponent;
+  {% if services %}
+use Symfony\Component\DependencyInjection\ContainerInterface;
+{{ di.use(services) }}
+  {% endif %}
+
+/**
+ * Implementation for {{ wire_label }} Wire Component.
+ *
+ * @WireComponent(
+ *   id = "{{ wire_id }}",
+ *   label = @Translation("{{ wire_label }}"),
+ * )
+ */
+class {{ class }} extends WireComponent {
+
+{% if services %}
+{{ di.properties(services) }}
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = new static($configuration, $plugin_id, $plugin_definition);
+{{ di.container(services) }}
+    return $instance;
+  }
+
+{% endif %}
+
+{% if inline == 'No' %}
+  public function render(): ?View {
+    return View::fromTpl('{{ wire_id }}');
+  }
+{% else %}
+  public function render(): ?View {
+  $twig = <<<'twig'
+      <div></div>
+  twig;
+  return View::fromString($twig);
+  }
+
+{% endif %}
+
+}

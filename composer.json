@@ -1,0 +1,37 @@
+{
+    "name": "wire-drupal/wire",
+    "description": "Dynamic interfaces for Drupal.",
+    "type": "drupal-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Cornel Andreev",
+            "email": "hugronaphor@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-json": "*",
+        "drupal/core": "^10",
+        "illuminate/macroable": "^10.6",
+        "illuminate/support": "^10.6"
+    },
+    "autoload": {
+        "files": [
+            "src/TemporaryUploadedFile.php"
+        ]
+    },
+    "extra": {
+        "drush": {
+            "services": {
+                "drush.services.yml": "^11"
+            }
+        }
+    }
+}

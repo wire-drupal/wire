@@ -1,0 +1,4 @@
+name: Wire
+type: module
+description: HTML over wire
+core_version_requirement: ^10

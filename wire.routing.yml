@@ -1,0 +1,66 @@
+wire.message:
+  path: '/wire/message/{name}'
+  defaults:
+    _controller: 'Drupal\wire\Controller\HttpConnectionHandler::handle'
+  methods:  [POST]
+  requirements:
+    _access: 'TRUE'
+    _method: 'POST'
+
+wire.upload-file:
+  path: '/wire/upload-file'
+  defaults:
+    _controller: 'Drupal\wire\Controller\FileUploadHandler::handle'
+  methods:  [POST]
+  requirements:
+    _access: 'TRUE'
+    _method: 'POST'
+
+wire.preview-file:
+  path: '/wire/preview-file/{filename}'
+  defaults:
+    _controller: 'Drupal\wire\Controller\FilePreviewHandler::handle'
+  methods:  [GET]
+  requirements:
+    _access: 'TRUE'
+    _method: 'GET'
+
+wire.js.init:
+  path: '/wire/init.js'
+  defaults:
+    _controller: 'Drupal\wire\Controller\JsAssetsController::init'
+  methods:  [GET]
+  requirements:
+    _access: 'TRUE'
+
+wire.js.source:
+  path: '/wire/wire.js'
+  defaults:
+    _controller: 'Drupal\wire\Controller\JsAssetsController::source'
+  methods:  [GET]
+  requirements:
+    _access: 'TRUE'
+
+wire.js.source.map:
+  path: '/wire/wire.js.map'
+  defaults:
+    _controller: 'Drupal\wire\Controller\JsAssetsController::sourceMap'
+  methods:  [GET]
+  requirements:
+    _access: 'TRUE'
+
+wire.js.alpinejs:
+  path: '/wire/alpinejs.js'
+  defaults:
+    _controller: 'Drupal\wire\Controller\JsAssetsController::alpinejs'
+  methods:  [GET]
+  requirements:
+    _access: 'TRUE'
+
+wire.styles:
+  path: '/wire/styles.css'
+  defaults:
+    _controller: 'Drupal\wire\Controller\JsAssetsController::styles'
+  methods:  [GET]
+  requirements:
+    _access: 'TRUE'
