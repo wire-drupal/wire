@@ -40,7 +40,7 @@ class WireTwigExtension extends AbstractExtension {
 
   public function wireErrors(array $context): MessageBag {
     return $context['__wire_errors'];
-    // To use methods of Message bug we will need to allow the class and methods
+    // To use methods of Message bag we will need to allow the class and methods
     // as per Drupal\Core\Template\TwigSandboxPolicy
   }
 

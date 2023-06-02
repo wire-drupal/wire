@@ -11,7 +11,7 @@ class WireManager {
   protected static bool $debug;
 
   public static function mount($name, array $params = []): LifecycleManager {
-    $id = str()->random(20);
+    $id = Wire::str()->random(20);
 
     return LifecycleManager::fromInitialRequest($name, $id)
       ->boot()

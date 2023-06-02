@@ -30,18 +30,18 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
 
   protected array $queryString = [];
 
-  protected $computedPropertyCache = [];
+  protected array $computedPropertyCache = [];
 
   protected ?bool $shouldSkipRender = NULL;
 
-  protected $preRenderedView;
+  protected ?View $preRenderedView;
 
   public array $wireCache = ['#cache' => ['tags' => [], 'contexts' => []]];
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->id ??= $this->getId();
+    $this->id ??= $configuration['uniqueId'] ?? $this->getId();
     $this->ensureIdPropertyIsntOverridden();
   }
 
@@ -145,13 +145,18 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
 
     $view = $this->preRenderedView;
 
-    return $view->render(
+    $rendered = $view->render(
       $this->getPublicPropertiesDefinedBySubClass() + [
         '__wire_cache' => $this->getWireCache(),
         '__wire_assets' => !$this->isStateless,
         '__wire_errors' => $this->getErrorBag(),
       ]
     );
+
+    // Special directives replacement.
+    return !$this->isStateless
+      ? str_replace('@this', "window.wire.find('" . $this->id . "')", $rendered)
+      : $rendered;
   }
 
   public function forgetComputed($key = NULL): void {

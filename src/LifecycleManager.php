@@ -28,7 +28,6 @@ class LifecycleManager {
 
   public ?WireResponse $response;
 
-
   public static function wirePluginManager() {
     if (!isset(self::$wirePluginManager)) {
       self::$wirePluginManager = \Drupal::service('plugin.manager.wire');
@@ -65,7 +64,7 @@ class LifecycleManager {
   public static function fromInitialRequest($name, $id) {
     return tap(new static, function ($instance) use ($name, $id) {
 
-      $pluginInstance = self::wirePluginManager()->createInstance($name);
+      $pluginInstance = self::wirePluginManager()->createInstance($name, ['uniqueId' => $id]);
       assert($pluginInstance instanceof WireComponent);
       $instance->instance = $pluginInstance;
 
@@ -73,7 +72,7 @@ class LifecycleManager {
 
       $instance->request = new WireRequest([
         'fingerprint' => [
-          'id' => $name,
+          'id' => $id,
           'name' => $name,
           'locale' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
           'path' => self::currentRequest()->getPathInfo(),
@@ -120,6 +119,7 @@ class LifecycleManager {
   }
 
   public function mount($params = []): static {
+
     // Assign all public component properties that have matching parameters.
     collect(array_intersect_key($params, $this->instance->getPublicPropertiesDefinedBySubClass()))
       ->each(function ($value, $property) {

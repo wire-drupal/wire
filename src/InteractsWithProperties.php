@@ -134,19 +134,20 @@ trait InteractsWithProperties {
   public function reset(...$properties): void {
     $propertyKeys = array_keys($this->getPublicPropertiesDefinedBySubClass());
 
-    // Keys to reset from array
+    // Keys to reset from array.
     if (count($properties) && is_array($properties[0])) {
       $properties = $properties[0];
     }
 
-    // Reset all
+    // Reset all.
     if (empty($properties)) {
       $properties = $propertyKeys;
     }
 
-    foreach ($properties as $property) {
-      $freshInstance = new static($this->id);
+    $freshInstance = \Drupal::service('plugin.manager.wire')
+      ->createInstance($this->getPluginId(), ['uniqueId' => Wire::str()->random(20)]);
 
+    foreach ($properties as $property) {
       $this->{$property} = $freshInstance->{$property};
     }
   }
