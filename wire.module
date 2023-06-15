@@ -4,3 +4,35 @@
  * @file
  * Main module file.
  */
+
+use Drupal\Core\Site\Settings;
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Add the CSRF token to the page.
+ */
+function wire_page_attachments(array &$page): void {
+
+  $token = NULL;
+  if (!\Drupal::currentUser()->isAnonymous()) {
+    $token = \Drupal::csrfToken()->get(Drupal::request()->getPathInfo());
+  }
+  elseif (\Drupal::hasService(Settings::get('wire_anon_csrf_service', ''))) {
+    $token = \Drupal::service(Settings::get('wire_anon_csrf_service', FALSE))->get(Drupal::request()->getPathInfo());
+  }
+
+  if ($token) {
+    $page['#attached']['html_head'][] = [
+      [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'w-csrf-token',
+          'content' => $token,
+        ],
+      ],
+      'wire-csrf-token',
+    ];
+  }
+
+}

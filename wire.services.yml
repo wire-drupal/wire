@@ -19,3 +19,7 @@ services:
   Drupal\wire\StackMiddleware\RegisterWireMiddleware:
     tags:
       - { name: http_middleware, priority: 180, responder: true }
+
+  wire.anonymous.csrf_token:
+    class: Drupal\wire\Access\AnonymousCsrfTokenGenerator
+    arguments: ['@private_key', '@session_manager.metadata_bag', '@session']

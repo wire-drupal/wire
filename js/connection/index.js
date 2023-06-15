@@ -36,11 +36,6 @@ export default class Connection {
             appUrl = `${appUrl}/${payload.fingerprint.locale}`
         }
 
-
-        if (window.__testing_request_interceptor) {
-            return window.__testing_request_interceptor(payload, this)
-        }
-
         // Forward the query string for the ajax requests.
         fetch(
             `${appUrl}/wire/message/${payload.fingerprint.name}`,
@@ -59,7 +54,7 @@ export default class Connection {
 
                     // We'll set this explicitly to mitigate potential interference from ad-blockers/etc.
                     'Referer': window.location.href,
-                    ...(csrfToken && { 'X-CSRF-TOKEN': csrfToken })
+                    ...(csrfToken && { 'W-CSRF-TOKEN': csrfToken })
                 },
             }
         )
