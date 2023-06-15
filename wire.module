@@ -18,7 +18,7 @@ function wire_page_attachments(array &$page): void {
   if (!\Drupal::currentUser()->isAnonymous()) {
     $token = \Drupal::csrfToken()->get(Drupal::request()->getPathInfo());
   }
-  elseif (\Drupal::hasService(Settings::get('wire_anon_csrf_service', ''))) {
+  elseif (\Drupal::hasService(Settings::get('wire_anon_csrf_service', FALSE))) {
     $token = \Drupal::service(Settings::get('wire_anon_csrf_service', FALSE))->get(Drupal::request()->getPathInfo());
   }
 

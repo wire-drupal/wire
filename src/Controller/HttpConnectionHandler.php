@@ -65,6 +65,11 @@ class HttpConnectionHandler implements ContainerInjectionInterface {
     $anonService = Settings::get('wire_anon_csrf_service', FALSE);
     $shouldCheck = $anonService && $isAnon;
 
+    if ($anonService && !\Drupal::hasService($anonService)) {
+      // Log the problem but continue and let the request fail.
+      watchdog_exception('wire', new \Exception('Defined "wire_anon_csrf_service" in Settings does not exists'));
+    }
+
     // Always check for authenticated users.
     $shouldCheck = $shouldCheck || !$isAnon;
 
@@ -72,7 +77,7 @@ class HttpConnectionHandler implements ContainerInjectionInterface {
       return TRUE;
     }
 
-    // At this point, CSRF is must.
+    // At this point, CSRF is must for any user.
     $csrfTokenInHeader = $this->currentRequest->headers->get('W-CSRF-TOKEN');
     if (empty($csrfTokenInHeader)) {
       return FALSE;
@@ -87,14 +92,12 @@ class HttpConnectionHandler implements ContainerInjectionInterface {
         $request->getPathInfo() ?? ''
       );
     }
-    elseif (\Drupal::hasService($anonService)) {
+    else {
       return \Drupal::service($anonService)->validate(
         $csrfTokenInHeader,
         $request->getPathInfo() ?? ''
       );
     }
-
-    return FALSE;
   }
 
 }
