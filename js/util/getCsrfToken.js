@@ -1,7 +1,5 @@
-
-// Unsupported way of getting csrf token.
 export function getCsrfToken() {
-    const tokenTag = document.head.querySelector('meta[name="csrf-token"]')
+    const tokenTag = document.head.querySelector('meta[name="w-csrf-token"]')
 
     if (tokenTag) {
         return tokenTag.content

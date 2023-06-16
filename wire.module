@@ -4,3 +4,26 @@
  * @file
  * Main module file.
  */
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Add CSRF token to the page for authenticated users.
+ */
+function wire_page_attachments(array &$page): void {
+  if (!\Drupal::currentUser()->isAnonymous()) {
+
+    $token = \Drupal::csrfToken()->get(Drupal::request()->getPathInfo());
+    $page['#attached']['html_head'][] = [
+      [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'w-csrf-token',
+          'content' => $token,
+        ],
+      ],
+      'wire-csrf-token',
+    ];
+  }
+
+}

@@ -68,8 +68,6 @@ class LifecycleManager {
       assert($pluginInstance instanceof WireComponent);
       $instance->instance = $pluginInstance;
 
-      $needsCsrf = \Drupal::service('session_configuration')->hasSession(self::currentRequest());
-
       $instance->request = new WireRequest([
         'fingerprint' => [
           'id' => $id,
@@ -77,7 +75,6 @@ class LifecycleManager {
           'locale' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
           'path' => self::currentRequest()->getPathInfo(),
           'method' => self::currentRequest()->getMethod(),
-          'csrfToken' => $needsCsrf ? \Drupal::service('csrf_token')->get(self::currentRequest()->getPathInfo()) : '',
         ],
         'updates' => [],
         'serverMemo' => [],
