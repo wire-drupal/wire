@@ -7,16 +7,9 @@ init:
       attributes: { data-turbo-eval: false, data-turbolinks-eval: false }
     }
   dependencies:
+    # Defined in hook_library_info_build().
     - wire/js-base
     - wire/styles
-
-js-base:
-  version: 0.0.1
-  js:
-    /wire/wire.js: {
-      minified: true,
-      attributes: { data-turbo-eval: false, data-turbolinks-eval: false }
-    }
 
 alpinejs:
   version: 3.12.1
