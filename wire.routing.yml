@@ -57,6 +57,14 @@ wire.js.alpinejs:
   requirements:
     _access: 'TRUE'
 
+wire.js.turbolinks:
+  path: '/wire/turbolinks.js'
+  defaults:
+    _controller: 'Drupal\wire\Controller\JsAssetsController::turbolinks'
+  methods:  [GET]
+  requirements:
+    _access: 'TRUE'
+
 wire.styles:
   path: '/wire/styles.css'
   defaults:

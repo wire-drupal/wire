@@ -54,6 +54,10 @@ class JsAssetsController extends ControllerBase {
     return $this->pretendResponseIsFile(__DIR__ . '/../../dist/alpinejs@3.12.1.min.js');
   }
 
+  public function turbolinks(): Response {
+    return $this->pretendResponseIsFile(__DIR__ . '/../../dist/turbolinks.js');
+  }
+
   public function styles(): Response {
     return $this->pretendResponseIsFile(__DIR__ . '/../../css/styles.css', 'text/css');
   }
@@ -70,16 +74,9 @@ class JsAssetsController extends ControllerBase {
     $appUrl = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
 
     $devTools = NULL;
-    $windowWireCheck = NULL;
     $windowAlpineCheck = NULL;
     if (self::$debug) {
       $devTools = 'window.wire.devTools(true);';
-
-      $windowWireCheck = <<<'HTML'
-if (window.wire) {
-	    console.warn('Wire: It looks like Wire\'s JavaScript assets have already been loaded. Make sure you aren\'t loading them twice.')
-	}
-HTML;
 
       $windowAlpineCheck = <<<'HTML'
   /* Make sure Wire loads first. */
@@ -98,12 +95,13 @@ HTML;
     }
 
     return <<<HTML
-    {$windowWireCheck}
 
-    window.wire = new Wire();
-    {$devTools}
-    window.Wire = window.wire;
-    window.wire_app_url = '{$appUrl}';
+    if (window.wire === undefined) {
+      window.wire = new Wire();
+      {$devTools}
+      window.Wire = window.wire;
+      window.wire_app_url = '{$appUrl}';
+    }
 
 	{$windowAlpineCheck}
     window.deferLoadingAlpine = function (callback) {
@@ -112,7 +110,7 @@ HTML;
         });
     };
 
-    let started = false;
+    var started = false;
 
     window.addEventListener('alpine:initializing', function () {
         if (! started) {

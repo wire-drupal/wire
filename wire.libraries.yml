@@ -11,6 +11,15 @@ init:
     - wire/js-base
     - wire/styles
 
+styles:
+  version: 0.0.1
+  css:
+    state:
+      /wire/styles.css: {
+        minified: false,
+        preprocess: false,
+      }
+
 alpinejs:
   version: 3.12.1
   js:
@@ -20,12 +29,11 @@ alpinejs:
       attributes: { defer: true }
     }
 
-styles:
+turbolinks:
   version: 0.0.1
-  css:
-    state:
-      /wire/styles.css: {
-        minified: false,
-        preprocess: false,
-      }
+  js:
+    '/wire/turbolinks.js': {
+      minified: false,
+      attributes: { data-turbo-eval: false, data-turbolinks-eval: false }
+    }
 

@@ -28,7 +28,6 @@ function wire_page_attachments(array &$page): void {
 
 }
 
-
 /**
  * Implements hook_library_info_build().
  */

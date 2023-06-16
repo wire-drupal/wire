@@ -5,7 +5,6 @@
 - [ ] Provide a way to add custom middlewares.
 - [ ] Defer model by default.
 - [ ] Explore Validation and ErrorBag improvements.
-- [ ] Consider implementing Turbolinks.
 
 
 ## Allowed Twig methods in classes to be added to settings.php
