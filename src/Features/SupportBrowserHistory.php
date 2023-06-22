@@ -31,9 +31,14 @@ class SupportBrowserHistory {
         }
 
         $fromQueryString = Arr::get($queryParams, $options['as'] ?? $property);
-
         if ($fromQueryString === NULL) {
           continue;
+        }
+
+        // Clean-up possible dirty query argument(e.g: ?page=1%3Fpage%3D1).
+        if (!is_array($fromQueryString) && !empty($fromQueryString)) {
+          parse_str($fromQueryString, $fromQueryStringArray);
+          $fromQueryString = reset($fromQueryStringArray);
         }
 
         $decoded = is_array($fromQueryString)
