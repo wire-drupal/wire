@@ -38,7 +38,7 @@ class SupportBrowserHistory {
         // Clean-up possible dirty query argument(e.g: ?page=1%3Fpage%3D1).
         if (!is_array($fromQueryString) && !empty($fromQueryString)) {
           parse_str($fromQueryString, $fromQueryStringArray);
-          $fromQueryString = reset($fromQueryStringArray);
+          $fromQueryString = Wire::str(key($fromQueryStringArray))->before('?');
         }
 
         $decoded = is_array($fromQueryString)
