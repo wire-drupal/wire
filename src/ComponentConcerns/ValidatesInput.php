@@ -58,4 +58,8 @@ trait ValidatesInput {
     );
   }
 
+  public function hasErrors(): bool {
+    return $this->getErrorBag()->count() !== 0;
+  }
+
 }
