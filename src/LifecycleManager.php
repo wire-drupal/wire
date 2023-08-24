@@ -138,7 +138,11 @@ class LifecycleManager {
     return tap(new static, function ($instance) use ($payload) {
       $instance->request = new WireRequest($payload);
 
-      $pluginInstance = self::wirePluginManager()->createInstance($instance->request->name());
+      $pluginInstance = self::wirePluginManager()->createInstance(
+        $instance->request->name(),
+        ['uniqueId' => $instance->request->id()]
+      );
+
       assert($pluginInstance instanceof WireComponent);
       $instance->instance = $pluginInstance;
     });
