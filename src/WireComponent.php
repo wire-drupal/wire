@@ -147,6 +147,7 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
 
     $rendered = $view->render(
       $this->getPublicPropertiesDefinedBySubClass() + [
+        '__wire_id' => $this->id,
         '__wire_cache' => $this->getWireCache(),
         '__wire_assets' => !$this->isStateless,
         '__wire_errors' => $this->getErrorBag(),
