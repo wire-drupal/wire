@@ -124,6 +124,13 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
 
     $view = call_user_func([$this, 'render']);
 
+    // Skip handling this component.
+    if ($view === NULL) {
+      $this->preRenderedView = $view;
+      $this->shouldSkipRender = TRUE;
+      return $this;
+    }
+
     if (is_string($view)) {
       $view = View::fromString($view, $this->getPublicPropertiesDefinedBySubClass());
     }
