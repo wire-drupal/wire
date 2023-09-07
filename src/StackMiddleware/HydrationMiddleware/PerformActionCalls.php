@@ -25,7 +25,7 @@ class PerformActionCalls implements HydrationMiddleware {
       $method = $update['payload']['method'];
       $params = $update['payload']['params'];
 
-      throw_if(
+      \throw_if(
         Wire::str($method)->is(static::PROTECTED_METHODS),
         new DirectlyCallingLifecycleHooksNotAllowedException($method, $unHydratedInstance->getId())
       );

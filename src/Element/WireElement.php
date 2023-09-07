@@ -47,7 +47,7 @@ class WireElement extends RenderElement {
 
     // Soft fail if wire component id is not set.
     if (empty($element['#id'])) {
-      return tap($element, function (&$element) {
+      return \tap($element, function (&$element) {
         $element['inline-template'] = [
           '#type' => 'inline_template',
           '#template' => '<span style="visibility:hidden;">Wire Component "#id" is not set </span>',

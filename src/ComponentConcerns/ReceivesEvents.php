@@ -41,7 +41,7 @@ trait ReceivesEvents {
   }
 
   public function getEventQueue() {
-    return collect($this->eventQueue)->map->serialize()->toArray();
+    return \collect($this->eventQueue)->map->serialize()->toArray();
   }
 
   public function getDispatchQueue() {
@@ -49,16 +49,16 @@ trait ReceivesEvents {
   }
 
   protected function getEventsAndHandlers() {
-    return collect($this->getListeners())
+    return \collect($this->getListeners())
       ->mapWithKeys(function ($value, $key) {
-        $key = is_numeric($key) ? $value : $key;
+        $key = \is_numeric($key) ? $value : $key;
 
         return [$key => $value];
       })->toArray();
   }
 
   public function getEventsBeingListenedFor() {
-    return array_keys($this->getEventsAndHandlers());
+    return \array_keys($this->getEventsAndHandlers());
   }
 
   public function fireEvent($event, $params, $id) {

@@ -48,9 +48,9 @@ trait ValidatesInput {
     $fields = (array) $field;
 
     return new MessageBag(
-      collect($this->getErrorBag())
+      \collect($this->getErrorBag())
         ->reject(function ($messages, $messageKey) use ($fields) {
-          return collect($fields)->some(function ($field) use ($messageKey) {
+          return \collect($fields)->some(function ($field) use ($messageKey) {
             return Wire::str($messageKey)->is($field);
           });
         })

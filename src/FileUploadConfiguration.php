@@ -31,11 +31,11 @@ class FileUploadConfiguration {
    * @throws \Exception
    */
   public static function normalizeRelativePath(string $path): string {
-    $path = str_replace('\\', '/', $path);
+    $path = \str_replace('\\', '/', $path);
     $path = static::removeFunkyWhiteSpace($path);
     $parts = [];
 
-    foreach (explode('/', $path) as $part) {
+    foreach (\explode('/', $path) as $part) {
       switch ($part) {
         case '':
         case '.':
@@ -47,7 +47,7 @@ class FileUploadConfiguration {
               'Path is outside of the defined root, path: [' . $path . ']'
             );
           }
-          array_pop($parts);
+          \array_pop($parts);
           break;
 
         default:
@@ -56,7 +56,7 @@ class FileUploadConfiguration {
       }
     }
 
-    return implode('/', $parts);
+    return \implode('/', $parts);
   }
 
   /**
@@ -68,7 +68,7 @@ class FileUploadConfiguration {
    * @throws \Exception
    */
   protected static function removeFunkyWhiteSpace($path): string {
-    if (preg_match('#\p{C}+#u', $path)) {
+    if (\preg_match('#\p{C}+#u', $path)) {
       throw new \Exception($path);
     }
 

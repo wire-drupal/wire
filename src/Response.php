@@ -33,7 +33,7 @@ class Response {
   }
 
   public function toInitialResponse() {
-    return tap($this)->embedIdInHtml();
+    return \tap($this)->embedIdInHtml();
   }
 
   public function embedThyselfInHtml(): void {
@@ -59,7 +59,7 @@ class Response {
   public function toArrayWithoutHtml(): array {
     return [
       'fingerprint' => $this->fingerprint,
-      'effects' => array_diff_key($this->effects, ['html' => NULL]),
+      'effects' => \array_diff_key($this->effects, ['html' => NULL]),
       'serverMemo' => $this->memo,
     ];
   }
@@ -102,10 +102,10 @@ class Response {
     }
 
     // Make sure any data marked as "dirty" is present in the resulting data payload.
-    foreach (data_get($this, 'effects.dirty', []) as $property) {
-      $property = head(explode('.', $property));
+    foreach (\data_get($this, 'effects.dirty', []) as $property) {
+      $property = \head(\explode('.', $property));
 
-      data_set($dirtyMemo, 'data.' . $property, $responseMemo['data'][$property] ?? NULL);
+      \data_set($dirtyMemo, 'data.' . $property, $responseMemo['data'][$property] ?? NULL);
     }
 
     return [

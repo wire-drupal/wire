@@ -48,20 +48,20 @@ class View {
 
     // Strict template loader.
     if ($tplPath[0] === '@') {
-      $tplParts = explode('/', $tplPath);
-      $themeOrModulePath = self::extensionPathResolver()->getPath(str_replace('@', '', $tplParts[0]), $tplParts[1]);
+      $tplParts = \explode('/', $tplPath);
+      $themeOrModulePath = self::extensionPathResolver()->getPath(\str_replace('@', '', $tplParts[0]), $tplParts[1]);
       $tplParts[0] = \Drupal::root();
       $tplParts[1] = $themeOrModulePath;
-      $templateToUse = implode('/', $tplParts);
+      $templateToUse = \implode('/', $tplParts);
     }
     // From registry.
     else {
       $templateToUse = self::componentsRegistry()->getTemplate($tplPath);
-      throw_if(!$templateToUse, new \Exception('Template not found: ' . $tplPath));
+      \throw_if(!$templateToUse, new \Exception('Template not found: ' . $tplPath));
     }
 
-    throw_if(!file_exists($templateToUse), new \Exception('Template file does not exist: ' . $tplPath));
-    return file_get_contents($templateToUse);
+    \throw_if(!\file_exists($templateToUse), new \Exception('Template file does not exist: ' . $tplPath));
+    return \file_get_contents($templateToUse);
   }
 
   private static function extensionPathResolver(): ExtensionPathResolver {

@@ -16,8 +16,8 @@ class SupportBootMethod {
     });
 
     Wire::listen('component.booted', function ($component, $request) {
-      if (method_exists($component, $method = 'booted')) {
-        call_user_func([$component, $method], [$request]);
+      if (\method_exists($component, $method = 'booted')) {
+        \call_user_func([$component, $method], [$request]);
       }
     });
   }

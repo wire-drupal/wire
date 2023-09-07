@@ -26,7 +26,7 @@ class FileUploadHandler implements ContainerInjectionInterface {
   public function handle() {
     $files = $this->requestStack->getCurrentRequest()->files->all()['files'] ?? [];
 
-    $filePaths = collect($files)->map(function ($file) {
+    $filePaths = \collect($files)->map(function ($file) {
       $filename = TemporaryUploadedFile::generateHashNameWithOriginalNameEmbedded($file);
       /** @var \Symfony\Component\HttpFoundation\File\File $file */
       $file->move(FileUploadConfiguration::directory(), $filename);

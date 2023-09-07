@@ -13,8 +13,8 @@ class TemporaryUploadedFile extends SymfonyUploadedFile {
   public function __construct($path) {
     $this->path = FileUploadConfiguration::path($path);
 
-    $tmpFile = tmpfile();
-    parent::__construct(stream_get_meta_data($tmpFile)['uri'], $this->path);
+    $tmpFile = \tmpfile();
+    parent::__construct(\stream_get_meta_data($tmpFile)['uri'], $this->path);
   }
 
   public function getPath(): string {
@@ -80,7 +80,7 @@ class TemporaryUploadedFile extends SymfonyUploadedFile {
       'wma',
     ];
 
-    return in_array($this->guessExtension(), $supportedPreviewTypes);
+    return \in_array($this->guessExtension(), $supportedPreviewTypes);
   }
 
   public function delete() {
@@ -88,15 +88,15 @@ class TemporaryUploadedFile extends SymfonyUploadedFile {
   }
 
   public static function generateHashNameWithOriginalNameEmbedded($file): string {
-    $hash = str()->random(30);
-    $meta = str('-meta' . base64_encode($file->getClientOriginalName()) . '-')->replace('/', '_');
+    $hash = \str()->random(30);
+    $meta = \str('-meta' . \base64_encode($file->getClientOriginalName()) . '-')->replace('/', '_');
     $extension = '.' . $file->guessExtension();
 
     return $hash . $meta . $extension;
   }
 
   public function extractOriginalNameFromFilePath($path): false|string {
-    return base64_decode(head(explode('-', last(explode('-meta', str($path)->replace('_', '/'))))));
+    return \base64_decode(\head(\explode('-', \last(\explode('-meta', \str($path)->replace('_', '/'))))));
   }
 
   public static function createFromWire($filePath) {
@@ -104,12 +104,12 @@ class TemporaryUploadedFile extends SymfonyUploadedFile {
   }
 
   public static function canUnserialize($subject) {
-    if (is_string($subject)) {
-      return (string) str($subject)->startsWith(['wire-file:', 'wire-files:']);
+    if (\is_string($subject)) {
+      return (string) \str($subject)->startsWith(['wire-file:', 'wire-files:']);
     }
 
-    if (is_array($subject)) {
-      return collect($subject)->contains(function ($value) {
+    if (\is_array($subject)) {
+      return \collect($subject)->contains(function ($value) {
         return static::canUnserialize($value);
       });
     }
@@ -118,21 +118,21 @@ class TemporaryUploadedFile extends SymfonyUploadedFile {
   }
 
   public static function unserializeFromWireRequest($subject) {
-    if (is_string($subject)) {
-      if (str($subject)->startsWith('wire-file:')) {
-        return static::createFromWire(str($subject)->after('wire-file:'));
+    if (\is_string($subject)) {
+      if (\str($subject)->startsWith('wire-file:')) {
+        return static::createFromWire(\str($subject)->after('wire-file:'));
       }
 
-      if (str($subject)->startsWith('wire-files:')) {
-        $paths = json_decode(str($subject)->after('wire-files:'), TRUE);
+      if (\str($subject)->startsWith('wire-files:')) {
+        $paths = \json_decode(\str($subject)->after('wire-files:'), TRUE);
 
-        return collect($paths)->map(function ($path) {
+        return \collect($paths)->map(function ($path) {
           return static::createFromWire($path);
         })->toArray();
       }
     }
 
-    if (is_array($subject)) {
+    if (\is_array($subject)) {
       foreach ($subject as $key => $value) {
         $subject[$key] = static::unserializeFromWireRequest($value);
       }
@@ -146,7 +146,7 @@ class TemporaryUploadedFile extends SymfonyUploadedFile {
   }
 
   public static function serializeMultipleForWireResponse($files): string {
-    return 'wire-files:' . json_encode(collect($files)->map->getFilename());
+    return 'wire-files:' . \json_encode(\collect($files)->map->getFilename());
   }
 
 }

@@ -62,10 +62,10 @@ class LifecycleManager {
   }
 
   public static function fromInitialRequest($name, $id) {
-    return tap(new static, function ($instance) use ($name, $id) {
+    return \tap(new static, function ($instance) use ($name, $id) {
 
       $pluginInstance = self::wirePluginManager()->createInstance($name, ['uniqueId' => $id]);
-      assert($pluginInstance instanceof WireComponent);
+      \assert($pluginInstance instanceof WireComponent);
       $instance->instance = $pluginInstance;
 
       $instance->request = new WireRequest([
@@ -100,7 +100,7 @@ class LifecycleManager {
 
     // The array is being reversed here, so the middleware dehydrate phase order of execution is
     // the inverse of hydrate. This makes the middlewares behave like layers in a shell.
-    foreach (array_reverse(static::$hydrationMiddleware) as $class) {
+    foreach (\array_reverse(static::$hydrationMiddleware) as $class) {
       $class::dehydrate($this->instance, $this->response);
     }
 
@@ -118,13 +118,13 @@ class LifecycleManager {
   public function mount($params = []): static {
 
     // Assign all public component properties that have matching parameters.
-    collect(array_intersect_key($params, $this->instance->getPublicPropertiesDefinedBySubClass()))
+    \collect(\array_intersect_key($params, $this->instance->getPublicPropertiesDefinedBySubClass()))
       ->each(function ($value, $property) {
         $this->instance->{$property} = $value;
       });
 
-    if (method_exists($this->instance, 'mount')) {
-      call_user_func([$this->instance, 'mount'], ...array_values($params));
+    if (\method_exists($this->instance, 'mount')) {
+      \call_user_func([$this->instance, 'mount'], ...\array_values($params));
     }
 
     Wire::dispatch('component.mount', $this->instance, $params);
@@ -135,7 +135,7 @@ class LifecycleManager {
 
   public static function fromSubsequentRequest($payload) {
 
-    return tap(new static, function ($instance) use ($payload) {
+    return \tap(new static, function ($instance) use ($payload) {
       $instance->request = new WireRequest($payload);
 
       $pluginInstance = self::wirePluginManager()->createInstance(
@@ -143,7 +143,7 @@ class LifecycleManager {
         ['uniqueId' => $instance->request->id()]
       );
 
-      assert($pluginInstance instanceof WireComponent);
+      \assert($pluginInstance instanceof WireComponent);
       $instance->instance = $pluginInstance;
     });
   }
@@ -157,7 +157,7 @@ class LifecycleManager {
   public function initialDehydrate(): static {
     $this->response = Response::fromRequest($this->request);
 
-    foreach (array_reverse(static::$initialDehydrationMiddleware) as $callable) {
+    foreach (\array_reverse(static::$initialDehydrationMiddleware) as $callable) {
       $callable($this->instance, $this->response);
     }
 

@@ -36,14 +36,14 @@ class WireTwigExtension extends AbstractExtension {
   }
 
   public function wireJs($data): ?string {
-    if (is_object($data) || is_array($data)) {
-      return "JSON.parse(atob('" . base64_encode(json_encode($data)) . "'))";
+    if (\is_object($data) || \is_array($data)) {
+      return "JSON.parse(atob('" . \base64_encode(\json_encode($data)) . "'))";
     }
-    elseif (is_string($data)) {
-      return "'" . str_replace("'", "\'", $data) . "'";
+    elseif (\is_string($data)) {
+      return "'" . \str_replace("'", "\'", $data) . "'";
     }
     else {
-      return json_encode($data);
+      return \json_encode($data);
     }
   }
 

@@ -20,7 +20,7 @@ class Wire {
   }
 
   public static function str($string = NULL) {
-    if (is_null($string)) {
+    if (\is_null($string)) {
       return new class {
 
         public function __call($method, $params) {

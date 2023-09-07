@@ -16,10 +16,10 @@ trait WithFileUploads {
     $this->cleanupOldUploads();
 
     if ($isMultiple) {
-      $file = collect($tmpPath)->map(function ($i) {
+      $file = \collect($tmpPath)->map(function ($i) {
         return TemporaryUploadedFile::createFromWire($i);
       })->toArray();
-      $this->emit('upload:finished', $name, collect($file)->map->getFilename()->toArray())->self();
+      $this->emit('upload:finished', $name, \collect($file)->map->getFilename()->toArray())->self();
     }
     else {
       $file = TemporaryUploadedFile::createFromWire($tmpPath[0]);
@@ -27,8 +27,8 @@ trait WithFileUploads {
 
       // If the property is an array, but the upload ISN'T set to "multiple"
       // then APPEND the upload to the array, rather than replacing it.
-      if (is_array($value = $this->getPropertyValue($name))) {
-        $file = array_merge($value, [$file]);
+      if (\is_array($value = $this->getPropertyValue($name))) {
+        $file = \array_merge($value, [$file]);
       }
     }
 
@@ -38,28 +38,28 @@ trait WithFileUploads {
   public function uploadErrored($name, $errorsInJson, $isMultiple) {
     $this->emit('upload:errored', $name)->self();
 
-    if (is_null($errorsInJson)) {
+    if (\is_null($errorsInJson)) {
       $message = "The {$name} failed to upload.";
 
       throw new ValidationException($message);
     }
 
     $errorsInJson = $isMultiple
-      ? str_ireplace('files', $name, $errorsInJson)
-      : str_ireplace('files.0', $name, $errorsInJson);
+      ? \str_ireplace('files', $name, $errorsInJson)
+      : \str_ireplace('files.0', $name, $errorsInJson);
 
-    $errors = json_decode($errorsInJson, TRUE)['errors'];
+    $errors = \json_decode($errorsInJson, TRUE)['errors'];
 
-    throw new ValidationException(implode(PHP_EOL, $errors));
+    throw new ValidationException(\implode(PHP_EOL, $errors));
   }
 
   public function removeUpload($name, $tmpFilename): void {
     $uploads = $this->getPropertyValue($name);
 
-    if (is_array($uploads) && isset($uploads[0]) && $uploads[0] instanceof TemporaryUploadedFile) {
+    if (\is_array($uploads) && isset($uploads[0]) && $uploads[0] instanceof TemporaryUploadedFile) {
       $this->emit('upload:removed', $name, $tmpFilename)->self();
 
-      $this->syncInput($name, array_values(array_filter($uploads, function ($upload) use ($tmpFilename) {
+      $this->syncInput($name, \array_values(\array_filter($uploads, function ($upload) use ($tmpFilename) {
         if ($upload->getFilename() === $tmpFilename) {
           $upload->delete();
           return FALSE;

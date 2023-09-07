@@ -14,7 +14,7 @@ class NormalizeServerMemoSansDataForJavaScript extends NormalizeDataForJavaScrip
         continue;
       }
 
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $response->memo[$key] = static::reindexArrayWithNumericKeysOtherwiseJavaScriptWillMessWithTheOrder($value);
       }
     }

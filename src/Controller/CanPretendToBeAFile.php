@@ -9,17 +9,17 @@ trait CanPretendToBeAFile {
 
   public function pretendResponseIsFile($file, $mimeType = 'application/javascript'): BinaryFileResponse|Response {
 
-    $expires = strtotime('+1 year');
-    $lastModified = filemtime($file);
+    $expires = \strtotime('+1 year');
+    $lastModified = \filemtime($file);
     $cacheControl = 'public, max-age=31536000';
 
     $matchesCache = function ($lastModified) {
       $ifModifiedSince = $_SERVER['HTTP_IF_MODIFIED_SINCE'] ?? '';
-      return @strtotime($ifModifiedSince) === $lastModified;
+      return @\strtotime($ifModifiedSince) === $lastModified;
     };
 
     $httpDate = function ($lastModified) {
-      return sprintf('%s GMT', gmdate('D, d M Y H:i:s', $lastModified));
+      return \sprintf('%s GMT', \gmdate('D, d M Y H:i:s', $lastModified));
     };
 
     if ($matchesCache($lastModified)) {

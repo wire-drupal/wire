@@ -14,7 +14,7 @@ class CallPropertyHydrationHooks implements HydrationMiddleware {
 
       // Call magic hydrateProperty methods on the component.
       // If the method doesn't exist, the __call will eat it.
-      $studlyProperty = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $property)));
+      $studlyProperty = \str_replace(' ', '', \ucwords(\str_replace(['-', '_'], ' ', $property)));
       $method = 'hydrate' . $studlyProperty;
       $instance->{$method}($value, $request);
     }
@@ -24,7 +24,7 @@ class CallPropertyHydrationHooks implements HydrationMiddleware {
     $publicProperties = $instance->getPublicPropertiesDefinedBySubClass();
 
     foreach ($publicProperties as $property => $value) {
-      $studlyProperty = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $property)));
+      $studlyProperty = \str_replace(' ', '', \ucwords(\str_replace(['-', '_'], ' ', $property)));
       $method = 'dehydrate' . $studlyProperty;
       $instance->{$method}($value, $response);
 

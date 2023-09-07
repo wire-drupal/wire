@@ -12,7 +12,7 @@ class PerformDataBindingUpdates implements HydrationMiddleware {
 
       $data = $update['payload'];
 
-      if (!array_key_exists('value', $data)) {
+      if (!\array_key_exists('value', $data)) {
         continue;
       }
 

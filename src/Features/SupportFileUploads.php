@@ -15,9 +15,9 @@ class SupportFileUploads {
 
   function __construct() {
     Wire::listen('property.hydrate', function ($property, $value, $component, $request) {
-      $uses = array_flip(class_uses_recursive($component));
+      $uses = \array_flip(\class_uses_recursive($component));
 
-      if (!in_array(WithFileUploads::class, $uses)) {
+      if (!\in_array(WithFileUploads::class, $uses)) {
         return;
       }
 
@@ -27,9 +27,9 @@ class SupportFileUploads {
     });
 
     Wire::listen('property.dehydrate', function ($property, $value, $component, $response) {
-      $uses = array_flip(class_uses_recursive($component));
+      $uses = \array_flip(\class_uses_recursive($component));
 
-      if (!in_array(WithFileUploads::class, $uses)) {
+      if (!\in_array(WithFileUploads::class, $uses)) {
         return;
       }
 
@@ -50,29 +50,29 @@ class SupportFileUploads {
       return $value->serializeForWireResponse();
     }
 
-    if (is_array($value) && isset(array_values($value)[0])) {
+    if (\is_array($value) && isset(\array_values($value)[0])) {
       $isValid = TRUE;
 
       foreach ($value as $key => $arrayValue) {
-        if (!($arrayValue instanceof TemporaryUploadedFile) || !is_numeric($key)) {
+        if (!($arrayValue instanceof TemporaryUploadedFile) || !\is_numeric($key)) {
           $isValid = FALSE;
           break;
         }
       }
 
       if ($isValid) {
-        return array_values($value)[0]::serializeMultipleForWireResponse($value);
+        return \array_values($value)[0]::serializeMultipleForWireResponse($value);
       }
     }
 
-    if (is_array($value)) {
+    if (\is_array($value)) {
       foreach ($value as $key => $item) {
         $value[$key] = $this->dehydratePropertyFromWithFileUploads($item);
       }
     }
 
     if ($value instanceof Wireable) {
-      $keys = array_keys(get_object_vars($value));
+      $keys = \array_keys(\get_object_vars($value));
 
       foreach ($keys as $key) {
         $value->{$key} = $this->dehydratePropertyFromWithFileUploads($value->{$key});

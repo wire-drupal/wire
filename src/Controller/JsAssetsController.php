@@ -66,7 +66,7 @@ class JsAssetsController extends ControllerBase {
     $scripts = $this->javaScriptAssets();
     $html = self::$debug ? ['<!-- Wire Scripts -->'] : [];
     $html[] = self::$debug ? $scripts : $this->minify($scripts);
-    return implode(PHP_EOL, $html);
+    return \implode(PHP_EOL, $html);
   }
 
   protected function javaScriptAssets(): string {
@@ -131,13 +131,13 @@ HTML;
   }
 
   protected function minify($content): string {
-    return preg_replace('~(\v|\t|\s{2,})~m', '', $content);
+    return \preg_replace('~(\v|\t|\s{2,})~m', '', $content);
   }
 
   private static function getDebugParameter(): bool {
     $debug = FALSE;
     $container = \Drupal::getContainer();
-    if ($container->hasParameter('twig.config') && is_array($container->getParameter('twig.config'))) {
+    if ($container->hasParameter('twig.config') && \is_array($container->getParameter('twig.config'))) {
       $debug = $container->getParameter('twig.config')['debug'];
     }
     return $debug;

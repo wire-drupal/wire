@@ -15,7 +15,7 @@ trait HandlesActions {
     $propertyName = $this->beforeFirstDot($name);
 
     $this->callBeforeAndAfterSyncHooks($name, $value, function ($name, $value) use ($propertyName, $rehash) {
-      throw_unless(
+      \throw_unless(
         $this->propertyIsPublicAndNotDefinedOnBaseClass($propertyName),
         new PublicPropertyNotFoundException($propertyName, $this::getId())
       );
@@ -28,13 +28,13 @@ trait HandlesActions {
 
         // Get existing data from model property.
         $results = [];
-        $results[$targetKey] = data_get($this->{$propertyName}, $targetKey, []);
+        $results[$targetKey] = \data_get($this->{$propertyName}, $targetKey, []);
 
         // Merge in new data.
-        data_set($results, $keyName, $value);
+        \data_set($results, $keyName, $value);
 
         // Re-assign data to model.
-        data_set($this->{$propertyName}, $targetKey, $results[$targetKey]);
+        \data_set($this->{$propertyName}, $targetKey, $results[$targetKey]);
       }
       else {
         $this->{$name} = $value;
@@ -66,11 +66,11 @@ trait HandlesActions {
 
     $this->updating($name, $value);
 
-    if (method_exists($this, $beforeMethod)) {
+    if (\method_exists($this, $beforeMethod)) {
       $this->{$beforeMethod}($value, $keyAfterFirstDot);
     }
 
-    if ($beforeNestedMethod && method_exists($this, $beforeNestedMethod)) {
+    if ($beforeNestedMethod && \method_exists($this, $beforeNestedMethod)) {
       $this->{$beforeNestedMethod}($value, $keyAfterLastDot);
     }
 
@@ -80,11 +80,11 @@ trait HandlesActions {
 
     $this->updated($name, $value);
 
-    if (method_exists($this, $afterMethod)) {
+    if (\method_exists($this, $afterMethod)) {
       $this->{$afterMethod}($value, $keyAfterFirstDot);
     }
 
-    if ($afterNestedMethod && method_exists($this, $afterNestedMethod)) {
+    if ($afterNestedMethod && \method_exists($this, $afterNestedMethod)) {
       $this->{$afterNestedMethod}($value, $keyAfterLastDot);
     }
 
@@ -92,28 +92,28 @@ trait HandlesActions {
   }
 
   public function callMethod($method, $params = [], $captureReturnValueCallback = NULL) {
-    $method = trim($method);
+    $method = \trim($method);
 
     switch ($method) {
       case '$sync':
-        $prop = array_shift($params);
-        $this->syncInput($prop, head($params));
+        $prop = \array_shift($params);
+        $this->syncInput($prop, \head($params));
 
         return;
 
       case '$set':
-        $prop = array_shift($params);
-        $this->syncInput($prop, head($params), $rehash = FALSE);
+        $prop = \array_shift($params);
+        $this->syncInput($prop, \head($params), $rehash = FALSE);
 
         return;
 
       case '$toggle':
-        $prop = array_shift($params);
+        $prop = \array_shift($params);
 
         if ($this->containsDots($prop)) {
           $propertyName = $this->beforeFirstDot($prop);
           $targetKey = $this->afterFirstDot($prop);
-          $currentValue = data_get($this->{$propertyName}, $targetKey);
+          $currentValue = \data_get($this->{$propertyName}, $targetKey);
         }
         else {
           $currentValue = $this->{$prop};
@@ -127,19 +127,19 @@ trait HandlesActions {
         return;
     }
 
-    if (!method_exists($this, $method)) {
-      throw_if($method === 'startUpload', new MissingFileUploadsTraitException($this::getId()));
+    if (!\method_exists($this, $method)) {
+      \throw_if($method === 'startUpload', new MissingFileUploadsTraitException($this::getId()));
       throw new MethodNotFoundException($method, $this::getId());
     }
 
-    throw_unless($this->methodIsPublicAndNotDefinedOnBaseClass($method), new NonPublicComponentMethodCall($method));
+    \throw_unless($this->methodIsPublicAndNotDefinedOnBaseClass($method), new NonPublicComponentMethodCall($method));
 
-    $returned = call_user_func([$this, $method], ...array_values($params));
+    $returned = \call_user_func([$this, $method], ...\array_values($params));
     $captureReturnValueCallback && $captureReturnValueCallback($returned);
   }
 
   protected function methodIsPublicAndNotDefinedOnBaseClass($methodName) {
-    return collect((new \ReflectionClass($this))->getMethods(\ReflectionMethod::IS_PUBLIC))
+    return \collect((new \ReflectionClass($this))->getMethods(\ReflectionMethod::IS_PUBLIC))
         ->reject(function ($method) {
           // The "render" method is a special case. This method might be called by event listeners or other ways.
           if ($method === 'render') {

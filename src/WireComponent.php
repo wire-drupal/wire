@@ -64,8 +64,8 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
   }
 
   protected function ensureIdPropertyIsntOverridden(): void {
-    throw_if(
-      array_key_exists('id', $this->getPublicPropertiesDefinedBySubClass()),
+    \throw_if(
+      \array_key_exists('id', $this->getPublicPropertiesDefinedBySubClass()),
       new CannotUseReservedWireComponentProperties('id', $this::getId())
     );
   }
@@ -84,13 +84,13 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
   }
 
   public function __get($property) {
-    $studlyProperty = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $property)));
+    $studlyProperty = \str_replace(' ', '', \ucwords(\str_replace(['-', '_'], ' ', $property)));
 
-    if (method_exists($this, $computedMethodName = 'get' . $studlyProperty . 'Property')) {
+    if (\method_exists($this, $computedMethodName = 'get' . $studlyProperty . 'Property')) {
       if (isset($this->computedPropertyCache[$property])) {
         return $this->computedPropertyCache[$property];
       }
-      return $this->computedPropertyCache[$property] = call_user_func([$this, $computedMethodName]);
+      return $this->computedPropertyCache[$property] = \call_user_func([$this, $computedMethodName]);
     }
 
     throw new PropertyNotFoundException($property, $this->getId());
@@ -98,8 +98,8 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
 
   public function __call($method, $params) {
     if (
-      in_array($method, ['mount', 'hydrate', 'dehydrate', 'updating', 'updated'])
-      || str($method)->startsWith(['updating', 'updated', 'hydrate', 'dehydrate'])
+      \in_array($method, ['mount', 'hydrate', 'dehydrate', 'updating', 'updated'])
+      || \str($method)->startsWith(['updating', 'updated', 'hydrate', 'dehydrate'])
     ) {
       // Eat calls to the lifecycle hooks if the dev didn't define them.
       return;
@@ -109,7 +109,7 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
       return $this->macroCall($method, $params);
     }
 
-    throw new \BadMethodCallException(sprintf(
+    throw new \BadMethodCallException(\sprintf(
       'Method %s::%s does not exist.', static::class, $method
     ));
   }
@@ -118,11 +118,11 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
 
     Wire::dispatch('component.rendering', $this);
 
-    if (!method_exists($this, 'render')) {
-      throw new \Exception('Please implement the "render" method on [' . get_class($this) . ']');
+    if (!\method_exists($this, 'render')) {
+      throw new \Exception('Please implement the "render" method on [' . \get_class($this) . ']');
     }
 
-    $view = call_user_func([$this, 'render']);
+    $view = \call_user_func([$this, 'render']);
 
     // Skip handling this component.
     if ($view === NULL) {
@@ -131,12 +131,12 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
       return $this;
     }
 
-    if (is_string($view)) {
+    if (\is_string($view)) {
       $view = View::fromString($view, $this->getPublicPropertiesDefinedBySubClass());
     }
 
-    throw_unless($view instanceof View,
-      new \Exception('"render" method on [' . get_class($this) . '] must return twig string'));
+    \throw_unless($view instanceof View,
+      new \Exception('"render" method on [' . \get_class($this) . '] must return twig string'));
 
     Wire::dispatch('component.rendered', $this, $view);
 
@@ -163,19 +163,19 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
 
     // Special directives replacement.
     return !$this->isStateless
-      ? str_replace('@this', "window.wire.find('" . $this->id . "')", $rendered)
+      ? \str_replace('@this', "window.wire.find('" . $this->id . "')", $rendered)
       : $rendered;
   }
 
   public function forgetComputed($key = NULL): void {
-    if (is_null($key)) {
+    if (\is_null($key)) {
       $this->computedPropertyCache = [];
       return;
     }
 
-    $keys = is_array($key) ? $key : func_get_args();
+    $keys = \is_array($key) ? $key : \func_get_args();
 
-    collect($keys)->each(function ($i) {
+    \collect($keys)->each(function ($i) {
       if (isset($this->computedPropertyCache[$i])) {
         unset($this->computedPropertyCache[$i]);
       }
@@ -183,19 +183,19 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
   }
 
   public function getQueryString() {
-    $componentQueryString = method_exists($this, 'queryString')
+    $componentQueryString = \method_exists($this, 'queryString')
       ? $this->queryString()
       : $this->queryString;
 
-    return collect(class_uses_recursive($class = static::class))
+    return \collect(\class_uses_recursive($class = static::class))
       ->map(function ($trait) use ($class) {
-        $member = 'queryString' . class_basename($trait);
+        $member = 'queryString' . \class_basename($trait);
 
-        if (method_exists($class, $member)) {
+        if (\method_exists($class, $member)) {
           return $this->{$member}();
         }
 
-        if (property_exists($class, $member)) {
+        if (\property_exists($class, $member)) {
           return $this->{$member};
         }
 
@@ -216,15 +216,15 @@ class WireComponent extends PluginBase implements WireComponentInterface, Contai
   }
 
   public function bootIfNotBooted(): void {
-    if (method_exists($this, $method = 'boot')) {
-      call_user_func([$this, $method]);
+    if (\method_exists($this, $method = 'boot')) {
+      \call_user_func([$this, $method]);
     }
   }
 
   public function initializeTraits(): void {
 
-    foreach (class_uses_recursive($class = static::class) as $trait) {
-      if (method_exists($class, $method = 'initialize' . class_basename($trait))) {
+    foreach (\class_uses_recursive($class = static::class) as $trait) {
+      if (\method_exists($class, $method = 'initialize' . \class_basename($trait))) {
         $this->{$method}();
       }
     }

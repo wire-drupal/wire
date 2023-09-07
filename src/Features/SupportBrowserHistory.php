@@ -4,7 +4,6 @@ namespace Drupal\wire\Features;
 
 use Drupal\wire\Response;
 use Drupal\wire\Wire;
-
 use Drupal\wire\WireComponentInterface;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -26,7 +25,7 @@ class SupportBrowserHistory {
       $queryParams = \Drupal::request()->query->all();
 
       foreach ($component->getQueryString() ?? [] as $property => $options) {
-        if (!is_array($options)) {
+        if (!\is_array($options)) {
           $property = $options;
         }
 
@@ -36,14 +35,14 @@ class SupportBrowserHistory {
         }
 
         // Clean-up possible dirty query argument(e.g: ?page=1%3Fpage%3D1).
-        if (!is_array($fromQueryString) && !empty($fromQueryString)) {
-          parse_str($fromQueryString, $fromQueryStringArray);
-          $fromQueryString = Wire::str(key($fromQueryStringArray))->before('?');
+        if (!\is_array($fromQueryString) && !empty($fromQueryString)) {
+          \parse_str($fromQueryString, $fromQueryStringArray);
+          $fromQueryString = Wire::str(\key($fromQueryStringArray))->before('?');
         }
 
-        $decoded = is_array($fromQueryString)
-          ? json_decode(json_encode($fromQueryString), TRUE)
-          : json_decode($fromQueryString, TRUE);
+        $decoded = \is_array($fromQueryString)
+          ? \json_decode(\json_encode($fromQueryString), TRUE)
+          : \json_decode($fromQueryString, TRUE);
 
         $component->$property = $decoded === NULL ? $fromQueryString : $decoded;
       }
@@ -108,7 +107,7 @@ class SupportBrowserHistory {
       return [];
     }
 
-    parse_str((string) parse_url($referer, PHP_URL_QUERY), $refererQueryString);
+    \parse_str((string) \parse_url($referer, PHP_URL_QUERY), $refererQueryString);
 
     return $refererQueryString;
   }
@@ -119,26 +118,26 @@ class SupportBrowserHistory {
 
   protected function mergeComponentPropertiesWithExistingQueryParamsFromOtherComponentsAndTheRequest($component) {
     if (!$this->mergedQueryParamsFromDehydratedComponents) {
-      $this->mergedQueryParamsFromDehydratedComponents = collect($this->getExistingQueryParams());
+      $this->mergedQueryParamsFromDehydratedComponents = \collect($this->getExistingQueryParams());
     }
 
     $excepts = $this->getExceptsFromComponent($component);
 
-    $this->mergedQueryParamsFromDehydratedComponents = collect(\Drupal::request()->query->all())
+    $this->mergedQueryParamsFromDehydratedComponents = \collect(\Drupal::request()->query->all())
       ->merge($this->mergedQueryParamsFromDehydratedComponents)
       ->merge($this->getQueryParamsFromComponentProperties($component))
       ->reject(function ($value, $key) use ($excepts) {
         return isset($excepts[$key]) && $excepts[$key] === $value;
       })
       ->map(function ($property) {
-        return is_bool($property) ? json_encode($property) : $property;
+        return \is_bool($property) ? \json_encode($property) : $property;
       });
 
     return $this->mergedQueryParamsFromDehydratedComponents;
   }
 
   protected function getExceptsFromComponent($component) {
-    return collect($component->getQueryString())
+    return \collect($component->getQueryString())
       ->filter(function ($value) {
         return isset($value['except']);
       })
@@ -149,9 +148,9 @@ class SupportBrowserHistory {
   }
 
   protected function getQueryParamsFromComponentProperties($component): Collection {
-    return collect($component->getQueryString())
+    return \collect($component->getQueryString())
       ->mapWithKeys(function ($value, $key) use ($component) {
-        $key = is_string($key) ? $key : $value;
+        $key = \is_string($key) ? $key : $value;
         $alias = $value['as'] ?? $key;
 
         return [$alias => $component->{$key}];
@@ -163,7 +162,7 @@ class SupportBrowserHistory {
       return '';
     }
 
-    return '?' . http_build_query($queryParams->toArray(), '', '&', PHP_QUERY_RFC1738);
+    return '?' . \http_build_query($queryParams->toArray(), '', '&', PHP_QUERY_RFC1738);
   }
 
 }

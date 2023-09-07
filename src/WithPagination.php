@@ -11,7 +11,7 @@ trait WithPagination {
   }
 
   public function previousPage(): void {
-    $this->setPage(max($this->page - 1, 0));
+    $this->setPage(\max($this->page - 1, 0));
   }
 
   public function nextPage(): void {
@@ -27,9 +27,9 @@ trait WithPagination {
   }
 
   public function setPage($page): void {
-    if (is_numeric($page)) {
+    if (\is_numeric($page)) {
       $page = (int) $page;
-      $page = max($page, 0);
+      $page = \max($page, 0);
     }
     $beforePaginatorMethod = 'updatingPaginators';
     $afterPaginatorMethod = 'updatedPaginators';
@@ -37,21 +37,21 @@ trait WithPagination {
     $beforeMethod = 'updating' . $this->pagerId;
     $afterMethod = 'updated' . $this->pagerId;
 
-    if (method_exists($this, $beforePaginatorMethod)) {
+    if (\method_exists($this, $beforePaginatorMethod)) {
       $this->{$beforePaginatorMethod}($page, $this->pagerId);
     }
 
-    if (method_exists($this, $beforeMethod)) {
+    if (\method_exists($this, $beforeMethod)) {
       $this->{$beforeMethod}($page, NULL);
     }
 
     $this->page = $page;
 
-    if (method_exists($this, $afterPaginatorMethod)) {
+    if (\method_exists($this, $afterPaginatorMethod)) {
       $this->{$afterPaginatorMethod}($page, $this->pagerId);
     }
 
-    if (method_exists($this, $afterMethod)) {
+    if (\method_exists($this, $afterMethod)) {
       $this->{$afterMethod}($page, NULL);
     }
   }

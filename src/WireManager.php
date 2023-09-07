@@ -35,7 +35,7 @@ class WireManager {
   public function originalPath() {
     if ($this->isDefinitelyWireRequest()) {
       $payload = Wire::getPayloadFromRequest();
-      return data_get($payload, 'fingerprint.path');
+      return \data_get($payload, 'fingerprint.path');
     }
 
     return \Drupal::request()->getUri();
@@ -44,7 +44,7 @@ class WireManager {
   public function originalMethod() {
     if ($this->isDefinitelyWireRequest()) {
       $payload = Wire::getPayloadFromRequest();
-      return data_get($payload, 'fingerprint.method');
+      return \data_get($payload, 'fingerprint.method');
     }
 
     return \Drupal::request()->getMethod();

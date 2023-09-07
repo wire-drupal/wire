@@ -50,13 +50,13 @@ class WireComponentsRegistry {
           $files = $this->fileSystem->scanDirectory($directoryPath, '/\.(twig)$/');
 
         } catch (NotRegularDirectoryException $exception) {
-          $this->getLogger('wire')->warning((sprintf('"@%s" is not a directory.', $directoryPath)));
+          $this->getLogger('wire')->warning((\sprintf('"@%s" is not a directory.', $directoryPath)));
           $files = [];
         }
 
-        ksort($files);
+        \ksort($files);
         foreach ($files as $filePath => $file) {
-          $expectedTplName = str_replace('.html.twig', '', $file->filename);
+          $expectedTplName = \str_replace('.html.twig', '', $file->filename);
           $this->registry[$themeName][$expectedTplName] = $filePath;
         }
       }
@@ -78,7 +78,7 @@ class WireComponentsRegistry {
       return $cached->data;
     }
 
-    $baseThemePaths = array_map(
+    $baseThemePaths = \array_map(
       static fn(Extension $extension) => $extension->getPath(),
       $this->activeTheme->getBaseThemeExtensions()
     );
@@ -86,7 +86,7 @@ class WireComponentsRegistry {
     $appRoot = $this->appRoot;
     $extensionDirectories = [
       ...$this->moduleHandler->getModuleDirectories(),
-      ...array_map(
+      ...\array_map(
         static fn(string $path) => $appRoot . '/' . $path,
         [
           ...$baseThemePaths,
@@ -95,17 +95,17 @@ class WireComponentsRegistry {
       ),
     ];
 
-    $reducedExtensionDirectories = array_filter(array_map(function ($path) {
-      $tplStorageDir = sprintf(
+    $reducedExtensionDirectories = \array_filter(\array_map(function ($path) {
+      $tplStorageDir = \sprintf(
         '%s%s%s%s%s',
-        rtrim($path, DIRECTORY_SEPARATOR),
+        \rtrim($path, DIRECTORY_SEPARATOR),
         DIRECTORY_SEPARATOR,
         'templates',
         DIRECTORY_SEPARATOR,
         'wire',
       );
 
-      return !str_contains($tplStorageDir, '/core') && is_dir($tplStorageDir)
+      return !\str_contains($tplStorageDir, '/core') && \is_dir($tplStorageDir)
         ? $tplStorageDir
         : NULL;
     }, $extensionDirectories));

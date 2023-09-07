@@ -15,7 +15,7 @@ class OptimizeRenderedDom {
   function __construct() {
 
     Wire::listen('component.dehydrate.initial', function ($component, $response) {
-      $response->memo['htmlHash'] = hash('crc32b', $response->effects['html'] ?? '');
+      $response->memo['htmlHash'] = \hash('crc32b', $response->effects['html'] ?? '');
     });
 
     Wire::listen('component.hydrate.subsequent', function ($component, $request) {
@@ -25,7 +25,7 @@ class OptimizeRenderedDom {
     Wire::listen('component.dehydrate.subsequent', function ($component, $response) {
       $oldHash = $this->htmlHashesByComponent[$component->id] ?? NULL;
 
-      $response->memo['htmlHash'] = $newHash = hash('crc32b', $response->effects['html'] ?? '');
+      $response->memo['htmlHash'] = $newHash = \hash('crc32b', $response->effects['html'] ?? '');
 
       if ($oldHash === $newHash) {
         $response->effects['html'] = NULL;

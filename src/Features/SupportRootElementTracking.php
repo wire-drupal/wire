@@ -12,11 +12,11 @@ class SupportRootElementTracking {
 
   function __construct() {
     Wire::listen('component.dehydrate.initial', function ($component, $response) {
-      if (!$html = data_get($response, 'effects.html')) {
+      if (!$html = \data_get($response, 'effects.html')) {
         return;
       }
 
-      data_set($response, 'effects.html', $this->addComponentEndingMarker($html, $component));
+      \data_set($response, 'effects.html', $this->addComponentEndingMarker($html, $component));
     });
   }
 

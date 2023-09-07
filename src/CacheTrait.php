@@ -13,20 +13,20 @@ trait CacheTrait {
   protected array $cache = [];
 
   private function setCache(string $type, string|array $value): void {
-    if (is_array($value) && $type === 'tags') {
+    if (\is_array($value) && $type === 'tags') {
       $this->cache[$type] = Cache::mergeTags($this->cache[$type] ?? [], $value);
       return;
     }
 
-    if (is_array($value) && $type === 'contexts') {
+    if (\is_array($value) && $type === 'contexts') {
       $this->cache[$type] = Cache::mergeContexts($this->cache[$type] ?? [], $value);
       return;
     }
 
-    if (!is_array($value) && $type === 'max-age') {
-      $maxAges = array_merge($this->cache[$type] ?? [], [$value]);
+    if (!\is_array($value) && $type === 'max-age') {
+      $maxAges = \array_merge($this->cache[$type] ?? [], [$value]);
       $minMaxAge = Cache::mergeMaxAges($maxAges);
-      $this->cache[$type] = is_array($minMaxAge) ? reset($minMaxAge) : $minMaxAge;
+      $this->cache[$type] = \is_array($minMaxAge) ? \reset($minMaxAge) : $minMaxAge;
     }
   }
 

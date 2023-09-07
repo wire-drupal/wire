@@ -12,7 +12,7 @@ class NormalizeComponentPropertiesForJavaScript extends NormalizeDataForJavaScri
 
   public static function dehydrate($instance, $response) {
     foreach ($instance->getPublicPropertiesDefinedBySubClass() as $key => $value) {
-      if (is_array($value) || $value instanceof Collection) {
+      if (\is_array($value) || $value instanceof Collection) {
         $instance->$key = static::reindexArrayWithNumericKeysOtherwiseJavaScriptWillMessWithTheOrder($value);
       }
     }

@@ -15,28 +15,28 @@ abstract class NormalizeDataForJavaScript {
 
     if ($value instanceof Collection) {
       $isCollection = TRUE;
-      $collectionClass = get_class($value);
+      $collectionClass = \get_class($value);
 
       $value = $value->all();
     }
 
-    if (!is_array($value)) {
+    if (!\is_array($value)) {
       return $value;
     }
 
-    $itemsWithNumericKeys = array_filter($value, function ($key) {
-      return is_numeric($key);
+    $itemsWithNumericKeys = \array_filter($value, function ($key) {
+      return \is_numeric($key);
     }, ARRAY_FILTER_USE_KEY);
-    ksort($itemsWithNumericKeys);
+    \ksort($itemsWithNumericKeys);
 
-    $itemsWithStringKeys = array_filter($value, function ($key) {
-      return !is_numeric($key);
+    $itemsWithStringKeys = \array_filter($value, function ($key) {
+      return !\is_numeric($key);
     }, ARRAY_FILTER_USE_KEY);
 
     // array_merge will reindex in some cases so, we stick to array_replace.
-    $normalizedData = array_replace($itemsWithNumericKeys, $itemsWithStringKeys);
+    $normalizedData = \array_replace($itemsWithNumericKeys, $itemsWithStringKeys);
 
-    $output = array_map(function ($value) {
+    $output = \array_map(function ($value) {
       return static::reindexArrayWithNumericKeysOtherwiseJavaScriptWillMessWithTheOrder($value);
     }, $normalizedData);
 

@@ -47,7 +47,7 @@ class Event {
       $output['selfOnly'] = TRUE;
     }
     if ($this->component) {
-      $output['to'] = is_subclass_of($this->component, WireComponent::class)
+      $output['to'] = \is_subclass_of($this->component, WireComponent::class)
         ? $this->component::getId()
         : $this->component;
     }
