@@ -3,6 +3,8 @@
     "description": "Dynamic interfaces for Drupal.",
     "type": "drupal-module",
     "license": "MIT",
+    "docs": "https://wire-drupal.com/docs",
+    "security": "https://github.com/wire-drupal/wire/blob/main/.github/SECURITY.md",
     "authors": [
         {
             "name": "Cornel Andreev",
