@@ -51,7 +51,7 @@ class JsAssetsController extends ControllerBase {
   }
 
   public function alpinejs(): Response {
-    return $this->pretendResponseIsFile(__DIR__ . '/../../dist/alpinejs@3.12.1.min.js');
+    return $this->pretendResponseIsFile(__DIR__ . '/../../dist/alpinejs@3.13.0.min.js');
   }
 
   public function turbolinks(): Response {
