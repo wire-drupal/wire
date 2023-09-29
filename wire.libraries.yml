@@ -1,39 +1,36 @@
 init:
-  version: 0.0.1
+  version: 0.0.2
   js:
-    /wire/init.js: {
-      minified: true,
-      preprocess: false,
-      attributes: { data-turbo-eval: false, data-turbolinks-eval: false }
+    dist/init.js: {
+      minified: false
     }
   dependencies:
-    # Defined in hook_library_info_build().
+    - core/drupalSettings
     - wire/js-base
     - wire/styles
 
 styles:
-  version: 0.0.1
+  version: 0.0.2
   css:
-    state:
-      /wire/styles.css: {
-        minified: false,
-        preprocess: false,
+    theme:
+      css/styles.css: {
+        minified: false
       }
+
+js-base:
+  version: 0cca5d7f474f99be4663
+  js:
+    dist/wire.js: {
+      minified: true,
+    }
 
 alpinejs:
   version: 3.13.0
   js:
-    '/wire/alpinejs.js': {
+    'dist/alpinejs@3.13.0.min.js': {
       minified: true,
       preprocess: false,
       attributes: { defer: true }
     }
 
-turbolinks:
-  version: 0.0.1
-  js:
-    '/wire/turbolinks.js': {
-      minified: false,
-      attributes: { data-turbo-eval: false, data-turbolinks-eval: false }
-    }
 

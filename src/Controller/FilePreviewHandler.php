@@ -15,13 +15,9 @@ class FilePreviewHandler implements ContainerInjectionInterface {
   public function __construct(
     protected FileSystem               $fileSystem,
     protected MimeTypeGuesserInterface $mimeTypeGuesser
-  ) {
-  }
+  ) {}
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('file_system'),
       $container->get('file.mime_type.guesser')

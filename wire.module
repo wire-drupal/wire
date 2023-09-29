@@ -7,13 +7,23 @@
 
 /**
  * Implements hook_page_attachments().
- *
- * Add CSRF token to the page for authenticated users.
  */
 function wire_page_attachments(array &$page): void {
-  if (!\Drupal::currentUser()->isAnonymous()) {
 
-    $token = \Drupal::csrfToken()->get(Drupal::request()->getPathInfo());
+  $request = Drupal::request();
+  $container = \Drupal::getContainer();
+
+  // Add needed values.
+  $page['#attached']['drupalSettings'] = [
+    'wireAppUrl' => $request->getSchemeAndHttpHost(),
+    'wireIsDebug' => $container->hasParameter('twig.config')
+      && \is_array($container->getParameter('twig.config'))
+      && $container->getParameter('twig.config')['debug'],
+  ];
+
+  // Add CSRF token to the page for authenticated users.
+  if (!\Drupal::currentUser()->isAnonymous()) {
+    $token = \Drupal::csrfToken()->get($request->getPathInfo());
     $page['#attached']['html_head'][] = [
       [
         '#tag' => 'meta',
@@ -26,26 +36,4 @@ function wire_page_attachments(array &$page): void {
     ];
   }
 
-}
-
-/**
- * Implements hook_library_info_build().
- */
-function wire_library_info_build(): array {
-  $libraries = [];
-
-  $manifest = json_decode(file_get_contents(__DIR__.'/dist/manifest.json'), true);
-  parse_str(parse_url($manifest['/wire.js'], PHP_URL_QUERY), $res);
-
-  $libraries['js-base'] = [
-    'version' => $res['id'] ?? 'rand' . rand(0, 999),
-    'js' => [
-      "/wire/wire.js" => [
-        'minified' => TRUE,
-        'attributes' => ['data-turbo-eval' => 'false', 'data-turbolinks-eval' => 'false'],
-      ],
-    ],
-  ];
-
-  return $libraries;
 }
