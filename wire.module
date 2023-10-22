@@ -11,14 +11,17 @@
 function wire_page_attachments(array &$page): void {
 
   $request = Drupal::request();
-  $container = \Drupal::getContainer();
 
-  // Add needed values.
-  $page['#attached']['drupalSettings'] = [
-    'wireAppUrl' => $request->getSchemeAndHttpHost(),
-    'wireIsDebug' => $container->hasParameter('twig.config')
-      && \is_array($container->getParameter('twig.config'))
-      && $container->getParameter('twig.config')['debug'],
+  // Add App url to the page.
+  $page['#attached']['html_head'][] = [
+    [
+      '#tag' => 'meta',
+      '#attributes' => [
+        'name' => 'w-app-url',
+        'content' => Drupal::request()->getSchemeAndHttpHost(),
+      ],
+    ],
+    'wire-app-url',
   ];
 
   // Add CSRF token to the page for authenticated users.

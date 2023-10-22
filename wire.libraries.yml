@@ -1,11 +1,10 @@
 init:
-  version: 0.0.2
+  version: 0.0.3
   js:
     dist/init.js: {
       minified: false
     }
   dependencies:
-    - core/drupalSettings
     - wire/js-base
     - wire/styles
 
@@ -18,7 +17,7 @@ styles:
       }
 
 js-base:
-  version: 0cca5d7f474f99be4663
+  version: 60ae6f8eea0ee779d6d3
   js:
     dist/wire.js: {
       minified: true,

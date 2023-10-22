@@ -1,6 +1,6 @@
 import store from '@/Store'
 import componentStore from '../Store'
-import { getCsrfToken } from '@/util'
+import { getCsrfToken, getAppUrl } from '@/util'
 
 export default class Connection {
     constructor() {
@@ -30,7 +30,7 @@ export default class Connection {
     sendMessage(message) {
         let payload = message.payload()
         let csrfToken = getCsrfToken()
-        let appUrl = window.wire_app_url
+        let appUrl = getAppUrl()
 
         if (this.shouldUseLocalePrefix(payload)) {
             appUrl = `${appUrl}/${payload.fingerprint.locale}`

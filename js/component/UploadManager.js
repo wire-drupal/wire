@@ -76,7 +76,7 @@ class UploadManager {
 
         let csrfToken = getCsrfToken()
 
-        if (csrfToken) headers['X-CSRF-TOKEN'] = csrfToken
+        if (csrfToken) headers['W-CSRF-TOKEN'] = csrfToken
 
         this.makeRequest(name, formData, 'post', url, headers, response => {
             return response.paths
