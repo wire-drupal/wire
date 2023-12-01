@@ -29,7 +29,7 @@
         "php-parallel-lint/php-parallel-lint": "^1.3"
     },
     "suggest": {
-        "drush/drush": "To generate WIre components Drush ^12 is required"
+        "drush/drush": "To generate Wire components Drush ^12 is required"
     },
     "autoload": {
         "files": [

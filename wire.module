@@ -18,7 +18,7 @@ function wire_page_attachments(array &$page): void {
       '#tag' => 'meta',
       '#attributes' => [
         'name' => 'w-app-url',
-        'content' => Drupal::request()->getSchemeAndHttpHost(),
+        'content' => $request->getSchemeAndHttpHost(),
       ],
     ],
     'wire-app-url',
