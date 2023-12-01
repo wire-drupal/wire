@@ -1,4 +1,0 @@
-services:
-  Drupal\wire\Generators\WireComponentCreateGenerator:
-    tags:
-      - { name: drush.generator.v2 }

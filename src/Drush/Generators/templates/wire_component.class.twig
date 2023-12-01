@@ -1,5 +1,5 @@
 {% import '_lib/di.twig' as di %}
-<?php
+<?php declare(strict_types = 1);
 
 namespace Drupal\{{ machine_name }}\Plugin\WireComponent;
 
@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   {% endif %}
 
 /**
- * Implementation for {{ wire_label }} Wire Component.
+ * Provides "{{ wire_label }}" Wire component.
  *
  * @WireComponent(
  *   id = "{{ wire_id }}",
@@ -26,7 +26,7 @@ class {{ class }} extends WireComponent {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     $instance = new static($configuration, $plugin_id, $plugin_definition);
 {{ di.container(services) }}
     return $instance;
@@ -34,7 +34,7 @@ class {{ class }} extends WireComponent {
 
 {% endif %}
 
-{% if inline == 'No' %}
+{% if not inline %}
   public function render(): ?View {
     return View::fromTpl('{{ wire_id }}');
   }

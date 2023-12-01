@@ -1,0 +1,20 @@
+{% macro use(services) %}
+  {% sort %}
+    {% for service in services %}
+use {{ service.type_fqn }};
+    {% endfor %}
+  {% endsort %}
+{% endmacro %}
+
+{% macro properties(services) %}
+  {% for service in services %}
+  private readonly ?{{ service.type }} ${{ service.name }};{{ loop.last ? '' : constant('PHP_EOL') }}
+  {%- endfor %}
+{% endmacro %}
+
+{% macro container(services) %}
+  {% for service_id, service in services %}
+    $instance->{{ service.name }} = $container->get('{{ service_id }}');{{ loop.last ? '' : "\n" }}
+  {%- endfor %}
+{% endmacro %}
+
