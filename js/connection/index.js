@@ -93,7 +93,7 @@ export default class Connection {
         let path = payload.fingerprint.path
         let locale = payload.fingerprint.locale
 
-        if (path.split('/')[0] == locale) {
+        if (path.split('/')[1] == locale) {
             return true
         }
 
