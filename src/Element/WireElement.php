@@ -2,7 +2,7 @@
 
 namespace Drupal\wire\Element;
 
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\wire\WireManager;
 
 /**
@@ -22,9 +22,9 @@ use Drupal\wire\WireManager;
  * ];
  * @endcode
  *
- * @RenderElement("wire")
+ * @RenderElementBase("wire")
  */
-class WireElement extends RenderElement {
+class WireElement extends RenderElementBase {
 
   /**
    * {@inheritdoc}

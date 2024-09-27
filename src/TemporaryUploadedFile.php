@@ -2,7 +2,7 @@
 
 namespace Drupal\wire;
 
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
 
@@ -25,7 +25,7 @@ class TemporaryUploadedFile extends SymfonyUploadedFile {
     return TRUE;
   }
 
-  public function store($destination = NULL, $filename = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
+  public function store($destination = NULL, $filename = NULL, $replace = FileExists::Rename) {
     $fileSystem = \Drupal::service('file_system');
     if (!$destination) {
       $destination = \Drupal::config('system.file')->get('default_scheme') . '://wire';
@@ -50,7 +50,7 @@ class TemporaryUploadedFile extends SymfonyUploadedFile {
     return $this->extractOriginalNameFromFilePath($this->path);
   }
 
-  public function temporaryUrl() {
+  public function temporaryUrl():string {
 
     if (!$this->isPreviewable()) {
       // @todo: Throw an exception?(when we have a proper validation handler)
@@ -60,7 +60,7 @@ class TemporaryUploadedFile extends SymfonyUploadedFile {
     return Url::fromRoute('wire.preview-file', ['filename' => $this->getFilename()])->toString();
   }
 
-  public function isPreviewable() {
+  public function isPreviewable(): bool {
     $supportedPreviewTypes = [
       'png',
       'gif',

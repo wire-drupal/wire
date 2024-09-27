@@ -20,7 +20,7 @@
     "require": {
         "php": "^8.1",
         "ext-json": "*",
-        "drupal/core": "^10",
+        "drupal/core": "^10.2 || ^11",
         "illuminate/macroable": "^10.6",
         "illuminate/support": "^10.6"
     },
