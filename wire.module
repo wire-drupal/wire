@@ -9,24 +9,9 @@
  * Implements hook_page_attachments().
  */
 function wire_page_attachments(array &$page): void {
-
-  $request = Drupal::request();
-
-  // Add App url to the page.
-  $page['#attached']['html_head'][] = [
-    [
-      '#tag' => 'meta',
-      '#attributes' => [
-        'name' => 'w-app-url',
-        'content' => $request->getSchemeAndHttpHost(),
-      ],
-    ],
-    'wire-app-url',
-  ];
-
   // Add CSRF token to the page for authenticated users.
   if (!\Drupal::currentUser()->isAnonymous()) {
-    $token = \Drupal::csrfToken()->get($request->getPathInfo());
+    $token = \Drupal::csrfToken()->get(Drupal::request()->getPathInfo());
     $page['#attached']['html_head'][] = [
       [
         '#tag' => 'meta',

@@ -17,7 +17,7 @@ styles:
       }
 
 js-base:
-  version: 60ae6f8eea0ee779d6d3
+  version: 485a635b2e59561b5604
   js:
     dist/wire.js: {
       minified: true,
