@@ -22,7 +22,7 @@ use Drupal\wire\WireManager;
  * ];
  * @endcode
  *
- * @RenderElementBase("wire")
+ * @RenderElement("wire")
  */
 class WireElement extends RenderElementBase {
 
@@ -44,7 +44,6 @@ class WireElement extends RenderElementBase {
    * Simply converts wire as inline_template for convenience.
    */
   public static function preRenderComponent(array $element): array {
-
     // Soft fail if wire component id is not set.
     if (empty($element['#id'])) {
       return \tap($element, function (&$element) {
