@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\wire\Annotation;
+declare(strict_types=1);
+
+namespace Drupal\wire\Plugin\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 
@@ -19,6 +21,6 @@ class WireComponent extends Plugin {
   /**
    * The Label of the WireComponent plugin.
    */
-  public string $label;
+  public ?string $label = NULL;
 
 }

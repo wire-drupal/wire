@@ -22,7 +22,7 @@ class LifecycleManager {
 
   protected static array $initialDehydrationMiddleware = [];
 
-  public ?WireComponent $instance;
+  public ?WireComponentBase $instance;
 
   public WireRequest $request;
 
@@ -65,7 +65,7 @@ class LifecycleManager {
     return \tap(new static, function ($instance) use ($name, $id) {
 
       $pluginInstance = self::wirePluginManager()->createInstance($name, ['uniqueId' => $id]);
-      \assert($pluginInstance instanceof WireComponent);
+      \assert($pluginInstance instanceof WireComponentBase);
       $instance->instance = $pluginInstance;
 
       $instance->request = new WireRequest([
@@ -143,7 +143,7 @@ class LifecycleManager {
         ['uniqueId' => $instance->request->id()]
       );
 
-      \assert($pluginInstance instanceof WireComponent);
+      \assert($pluginInstance instanceof WireComponentBase);
       $instance->instance = $pluginInstance;
     });
   }
