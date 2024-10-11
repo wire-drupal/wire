@@ -8,21 +8,17 @@ use Drupal\wire\Exceptions\CannotUseReservedWireComponentProperties;
 use Drupal\wire\Exceptions\PropertyNotFoundException;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Illuminate\Support\Traits\Macroable;
 
 /**
  * Base class for Wire components.
  */
 class WireComponentBase extends PluginBase implements WireComponentInterface, ContainerFactoryPluginInterface {
 
-  use InteractsWithProperties,
-    ComponentConcerns\ValidatesInput,
-    ComponentConcerns\HandlesActions,
-    ComponentConcerns\ReceivesEvents,
-    ComponentConcerns\PerformsRedirects,
-    Macroable {
-    __call as macroCall;
-  }
+  use InteractsWithProperties;
+  use ComponentConcerns\ValidatesInput;
+  use ComponentConcerns\HandlesActions;
+  use ComponentConcerns\ReceivesEvents;
+  use ComponentConcerns\PerformsRedirects;
 
   public string $id;
 
@@ -103,10 +99,6 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
     ) {
       // Eat calls to the lifecycle hooks if the dev didn't define them.
       return;
-    }
-
-    if (static::hasMacro($method)) {
-      return $this->macroCall($method, $params);
     }
 
     throw new \BadMethodCallException(\sprintf(
