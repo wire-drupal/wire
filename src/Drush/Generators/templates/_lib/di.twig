@@ -14,7 +14,7 @@ use {{ service.type_fqn }};
 
 {% macro container(services) %}
   {% for service_id, service in services %}
-    $instance->{{ service.name }} = $container->get('{{ service_id }}');{{ loop.last ? '' : "\n" }}
+      $instance->{{ service.name }} = $container->get('{{ service_id }}');{{ loop.last ? '' : constant('PHP_EOL') }}
   {%- endfor %}
 {% endmacro %}
 

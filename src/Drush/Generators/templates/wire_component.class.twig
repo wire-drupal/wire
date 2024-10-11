@@ -4,34 +4,24 @@
 namespace Drupal\{{ machine_name }}\Plugin\WireComponent;
 
 use Drupal\wire\View;
-use Drupal\wire\WireComponent;
+use Drupal\wire\WireComponentBase;
+use Drupal\wire\Plugin\Attribute\WireComponent;
   {% if services %}
 use Symfony\Component\DependencyInjection\ContainerInterface;
 {{ di.use(services) }}
   {% endif %}
 
-/**
- * Provides "{{ wire_label }}" Wire component.
- *
- * @WireComponent(
- *   id = "{{ wire_id }}",
- *   label = @Translation("{{ wire_label }}"),
- * )
- */
-class {{ class }} extends WireComponent {
+#[WireComponent(id: '{{ wire_id }}')]
+class {{ class }} extends WireComponentBase {
 
 {% if services %}
 {{ di.properties(services) }}
-
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     $instance = new static($configuration, $plugin_id, $plugin_definition);
+    return tap($instance, function ($instance) use ($container) {
 {{ di.container(services) }}
-    return $instance;
+    });
   }
-
 {% endif %}
 
 {% if not inline %}
