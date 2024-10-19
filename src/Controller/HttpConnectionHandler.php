@@ -5,6 +5,7 @@ namespace Drupal\wire\Controller;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Session\AccountProxy;
+use Drupal\wire\Exceptions\AccessDeniedException;
 use Drupal\wire\LifecycleManager;
 use Drupal\wire\Wire;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -45,14 +46,19 @@ class HttpConnectionHandler implements ContainerInjectionInterface {
 
     $payload = Wire::getPayloadFromRequest($this->currentRequest);
 
-    return new JsonResponse(
-      LifecycleManager::fromSubsequentRequest($payload)
+    try {
+      $response = LifecycleManager::fromSubsequentRequest($payload)
         ->boot()
         ->hydrate()
         ->renderToView()
         ->dehydrate()
-        ->toSubsequentResponse()
-    );
+        ->toSubsequentResponse();
+    }
+    catch (AccessDeniedException $e) {
+      throw new AccessDeniedHttpException($e->getMessage());
+    }
+
+    return new JsonResponse($response);
   }
 
   private function hasAndItIsValidCsrfToken(): bool {

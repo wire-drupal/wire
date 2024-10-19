@@ -32,7 +32,7 @@ class WireTwigExtension extends AbstractExtension {
   }
 
   public function wire($resource, array $params = []): ?string {
-    return WireManager::mount($resource, $params)->html();
+    return WireManager::mount($resource, $params)?->html();
   }
 
   public function wireJs($data): ?string {

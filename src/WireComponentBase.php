@@ -44,7 +44,7 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     return new static(
       $configuration,
       $plugin_id,
@@ -57,6 +57,13 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
    */
   public function getId(): string {
     return $this->getPluginId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access(): bool {
+    return TRUE;
   }
 
   protected function ensureIdPropertyIsntOverridden(): void {
@@ -94,7 +101,7 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
 
   public function __call($method, $params) {
     if (
-      \in_array($method, ['mount', 'hydrate', 'dehydrate', 'updating', 'updated'])
+      \in_array($method, ['mount', 'hydrate', 'dehydrate', 'updating', 'updated', 'access'])
       || \str($method)->startsWith(['updating', 'updated', 'hydrate', 'dehydrate'])
     ) {
       // Eat calls to the lifecycle hooks if the dev didn't define them.
@@ -127,8 +134,10 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
       $view = View::fromString($view, $this->getPublicPropertiesDefinedBySubClass());
     }
 
-    \throw_unless($view instanceof View,
-      new \Exception('"render" method on [' . \get_class($this) . '] must return twig string'));
+    \throw_unless(
+      $view instanceof View,
+      new \Exception('"render" method on [' . \get_class($this) . '] must return twig markup')
+    );
 
     Wire::dispatch('component.rendered', $this, $view);
 

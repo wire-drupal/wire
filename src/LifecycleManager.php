@@ -22,6 +22,8 @@ class LifecycleManager {
 
   protected static array $initialDehydrationMiddleware = [];
 
+  protected static array $mountAccessMiddleware = [];
+
   public ?WireComponentBase $instance;
 
   public WireRequest $request;
@@ -55,6 +57,10 @@ class LifecycleManager {
 
   public static function registerInitialHydrationMiddleware(array $callables): void {
     static::$initialHydrationMiddleware += $callables;
+  }
+
+  public static function registerMountAccessMiddleware(array $callables): void {
+    static::$mountAccessMiddleware += $callables;
   }
 
   public static function registerInitialDehydrationMiddleware(array $callables): void {
@@ -125,6 +131,10 @@ class LifecycleManager {
 
     if (\method_exists($this->instance, 'mount')) {
       \call_user_func([$this->instance, 'mount'], ...\array_values($params));
+    }
+
+    foreach (static::$mountAccessMiddleware as $callable) {
+      $callable($this->instance, $this->request);
     }
 
     Wire::dispatch('component.mount', $this->instance, $params);

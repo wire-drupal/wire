@@ -57,7 +57,7 @@ class WireElement extends RenderElementBase {
     $context = $element['#context'] ?? [];
     $element['inline-template'] = [
       '#type' => 'inline_template',
-      '#template' => WireManager::mount($element['#id'], $context)->html(),
+      '#template' => WireManager::mount($element['#id'], $context)?->html(),
     ];
     return $element;
   }

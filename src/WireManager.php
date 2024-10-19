@@ -3,6 +3,7 @@
 namespace Drupal\wire;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\wire\Exceptions\AccessDeniedException;
 
 class WireManager {
 
@@ -10,16 +11,22 @@ class WireManager {
 
   protected static bool $debug;
 
-  public static function mount($name, array $params = []): LifecycleManager {
+  public static function mount($name, array $params = []): ?LifecycleManager {
+
     $id = Wire::str()->random(20);
 
-    return LifecycleManager::fromInitialRequest($name, $id)
-      ->boot()
-      ->initialHydrate()
-      ->mount($params)
-      ->renderToView()
-      ->initialDehydrate()
-      ->toInitialResponse();
+    try {
+      return LifecycleManager::fromInitialRequest($name, $id)
+        ->boot()
+        ->initialHydrate()
+        ->mount($params)
+        ->renderToView()
+        ->initialDehydrate()
+        ->toInitialResponse();
+    }
+    catch (AccessDeniedException) {
+      return NULL;
+    }
   }
 
   public function dispatch($event, ...$params): void {

@@ -19,4 +19,14 @@ interface WireComponentInterface extends PluginInspectionInterface {
    */
   public function getId(): string;
 
+  /**
+   * Checks access for the Wire component.
+   *
+   * @return bool
+   *   TRUE if access is allowed, FALSE otherwise.
+   *
+   * @todo: Decide if Drupal\Core\Access\AccessResult should be expected here.
+   */
+  public function access(): bool;
+
 }

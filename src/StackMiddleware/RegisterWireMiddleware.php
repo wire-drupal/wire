@@ -17,6 +17,7 @@ use Drupal\wire\StackMiddleware\HydrationMiddleware\HydratePublicProperties;
 use Drupal\wire\StackMiddleware\HydrationMiddleware\NormalizeComponentPropertiesForJavaScript;
 use Drupal\wire\StackMiddleware\HydrationMiddleware\NormalizeServerMemoSansDataForJavaScript;
 use Drupal\wire\LifecycleManager;
+use Drupal\wire\StackMiddleware\HydrationMiddleware\PerformAccessCheck;
 use Drupal\wire\StackMiddleware\HydrationMiddleware\PerformActionCalls;
 use Drupal\wire\StackMiddleware\HydrationMiddleware\PerformDataBindingUpdates;
 use Drupal\wire\StackMiddleware\HydrationMiddleware\PerformEventEmissions;
@@ -48,7 +49,6 @@ class RegisterWireMiddleware implements HttpKernelInterface {
     SupportComponentTraits::init();
     SupportRootElementTracking::init();
 
-
     LifecycleManager::registerHydrationMiddleware([
 
       /* This is the core middleware stack of Wire.
@@ -72,6 +72,9 @@ class RegisterWireMiddleware implements HttpKernelInterface {
       /* ↓ */ PerformActionCalls::class, /* ------------------------ ↑ */
       /* ↓ */ PerformEventEmissions::class, /* --------------------- ↑ */
       /* ↓                                                           ↑ */
+      /* ↓    Access checks                                          ↑ */
+      /* ↓ */ PerformAccessCheck::class, /* ------------------------ ↑ */
+      /* ↓                                                           ↑ */
       /* ↓    Output Stuff                                           ↑ */
       /* ↓ */ RenderView::class, /* -------------------------------- ↑ */
       /* ↓ */ NormalizeComponentPropertiesForJavaScript::class, /* - ↑ */
@@ -94,6 +97,12 @@ class RegisterWireMiddleware implements HttpKernelInterface {
     LifecycleManager::registerInitialHydrationMiddleware([
 
       [CallHydrationHooks::class, 'initialHydrate'],
+
+    ]);
+
+    LifecycleManager::registerMountAccessMiddleware([
+
+      [PerformAccessCheck::class, 'mountAccess'],
 
     ]);
 
