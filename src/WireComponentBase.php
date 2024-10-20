@@ -80,7 +80,8 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
       if (isset($value)) {
         return TRUE;
       }
-    } catch (PropertyNotFoundException $ex) {
+    }
+    catch (PropertyNotFoundException $ex) {
     }
 
     return FALSE;
@@ -114,7 +115,6 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
   }
 
   public function renderToView(): static {
-
     Wire::dispatch('component.rendering', $this);
 
     if (!\method_exists($this, 'render')) {
@@ -176,7 +176,7 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
 
     $keys = \is_array($key) ? $key : \func_get_args();
 
-    \collect($keys)->each(function ($i) {
+    \collect($keys)->each(function($i) {
       if (isset($this->computedPropertyCache[$i])) {
         unset($this->computedPropertyCache[$i]);
       }
@@ -189,7 +189,7 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
       : $this->queryString;
 
     return \collect(\class_uses_recursive($class = static::class))
-      ->map(function ($trait) use ($class) {
+      ->map(function($trait) use ($class) {
         $member = 'queryString' . \class_basename($trait);
 
         if (\method_exists($class, $member)) {
@@ -203,7 +203,7 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
         return [];
       })
       ->values()
-      ->mapWithKeys(function ($value) {
+      ->mapWithKeys(function($value) {
         return $value;
       })
       ->merge($componentQueryString)
@@ -223,7 +223,6 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
   }
 
   public function initializeTraits(): void {
-
     foreach (\class_uses_recursive($class = static::class) as $trait) {
       if (\method_exists($class, $method = 'initialize' . \class_basename($trait))) {
         $this->{$method}();
