@@ -6,6 +6,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\wire\Exceptions\CannotUseReservedWireComponentProperties;
 use Drupal\wire\Exceptions\PropertyNotFoundException;
+use Drupal\wire\Plugin\Attribute\WireCache;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,6 +20,7 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
   use ComponentConcerns\HandlesActions;
   use ComponentConcerns\ReceivesEvents;
   use ComponentConcerns\PerformsRedirects;
+  use CacheTrait;
 
   public string $id;
 
@@ -39,6 +41,7 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
 
     $this->id ??= $configuration['uniqueId'] ?? $this->getId();
     $this->ensureIdPropertyIsntOverridden();
+    $this->initializeCacheFromAttributes();
   }
 
   /**
@@ -228,6 +231,26 @@ class WireComponentBase extends PluginBase implements WireComponentInterface, Co
         $this->{$method}();
       }
     }
+  }
+
+  protected function initializeCacheFromAttributes(): void {
+    $reflectionClass = new \ReflectionClass($this);
+    $wireCacheAttributes = $reflectionClass->getAttributes(WireCache::class);
+
+    foreach ($wireCacheAttributes as $cacheAttribute) {
+      $wireCacheInstance = $cacheAttribute->newInstance();
+      if (!empty($wireCacheInstance->contexts)) {
+        $this->setCache('contexts', $wireCacheInstance->contexts);
+      }
+      if (!empty($wireCacheInstance->tags)) {
+        $this->setCache('tags', $wireCacheInstance->tags);
+      }
+      if (property_exists($wireCacheInstance, 'maxAge')) {
+        $this->setCache('max-age', $wireCacheInstance->maxAge);
+      }
+    }
+
+    $this->setWireCache($this->getCache());
   }
 
   public function getWireCache(): array {
