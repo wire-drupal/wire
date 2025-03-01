@@ -24,9 +24,9 @@ js-base:
     }
 
 alpinejs:
-  version: 3.13.0
+  version: 3.14.8
   js:
-    'dist/alpinejs@3.13.0.min.js': {
+    'dist/alpinejs@3.14.8.min.js': {
       minified: true,
       preprocess: false,
       attributes: { defer: true }
